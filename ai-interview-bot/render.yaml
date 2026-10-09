@@ -21,11 +21,11 @@ services:
       - key: FRONTEND_URL
         fromService:
           type: web
-          name: ai-interview-bot-frontend
+          name: ai-interview-bot
           envVarKey: RENDER_EXTERNAL_URL
 
   - type: web
-    name: ai-interview-bot-frontend
+    name: ai-interview-bot
     runtime: static
     rootDir: ai-interview-bot/frontend
     buildCommand: npm ci && npm run build
