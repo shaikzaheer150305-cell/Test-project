@@ -50,6 +50,31 @@ ai-interview-bot/
 
 ## Setup Instructions
 
+### Free cloud deployment (Render + MongoDB Atlas)
+
+The `render.yaml` Blueprint creates a free Node.js API service and a free static frontend. Create a free MongoDB Atlas cluster, add the Render service's outbound access as allowed in Atlas, and use the Atlas connection string as `MONGODB_URI` when Render prompts for it. Keep the database credential private and do not commit it.
+
+Render deploys Blueprints from a Git repository. Connect the existing GitHub repository to Render and select `ai-interview-bot/render.yaml` as the Blueprint file. The service root paths account for this project living in a subfolder of the repository. The Blueprint generates `JWT_SECRET` and connects the frontend URL to the API automatically. `GEMINI_API_KEY` is optional; without it, the app uses its built-in question bank.
+
+Free Render services sleep after 15 minutes without requests and can take about a minute to wake. MongoDB Atlas free clusters have a 512 MB storage limit. See [Render's free service limits](https://render.com/docs/free) and [Atlas free cluster limits](https://www.mongodb.com/docs/atlas/reference/free-shared-limitations/).
+
+### Run with Docker
+
+Docker Compose builds the frontend and backend images and starts MongoDB with a persistent data volume.
+
+1. Copy `.env.docker.example` to `.env` and set `JWT_SECRET` to a long, random value. Add `GEMINI_API_KEY` if you want Gemini-generated questions; it is optional.
+2. From the project root, build and start the app:
+
+```bash
+docker compose up --build -d
+```
+
+3. Open `http://localhost:8080` (or the port set by `APP_PORT`). Check the API at `http://localhost:8080/api/health`.
+
+Stop the services with `docker compose down`. MongoDB data remains in the `mongo_data` volume. To remove the database data as well, run `docker compose down -v`.
+
+The root `Dockerfile` builds the production frontend image. The backend has its own `backend/Dockerfile`; `docker-compose.yml` runs both alongside MongoDB.
+
 ### Prerequisites
 - Node.js (v16+)
 - MongoDB (running locally or MongoDB Atlas)

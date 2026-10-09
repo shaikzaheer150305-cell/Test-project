@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: ai-interview-bot-api
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: ai-interview-bot/backend
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: MONGODB_URI
+        sync: false
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: ai-interview-bot-frontend
+          envVarKey: RENDER_EXTERNAL_URL
+
+  - type: web
+    name: ai-interview-bot-frontend
+    runtime: static
+    rootDir: ai-interview-bot/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: ai-interview-bot-api
+          envVarKey: RENDER_EXTERNAL_URL
+

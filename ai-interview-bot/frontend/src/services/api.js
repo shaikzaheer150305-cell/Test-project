@@ -1,4 +1,7 @@
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const configuredApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+const API_BASE = configuredApiUrl
+  ? `${configuredApiUrl.replace(/\/api$/, '')}/api`
+  : '/api';
 
 const getHeaders = () => {
   const token = localStorage.getItem('token');
