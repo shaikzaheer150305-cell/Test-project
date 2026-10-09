@@ -33,19 +33,20 @@ class AIService {
     return questionBank.getQuestion(config, previousQuestions);
   }
 
-  async _generateWithAI(config, previousQuestions, performanceHistory) {
+async _generateWithAI(config, previousQuestions, performanceHistory) {
     const { jobRole, technology, experienceLevel, difficulty, interviewType, totalQuestions } = config;
     const questionNumber = previousQuestions.length + 1;
 
     let performanceContext = '';
+    let avgScore = 0;
     if (performanceHistory.length > 0) {
-      const avgScore = performanceHistory.reduce((a, b) => a + b, 0) / performanceHistory.length;
+      avgScore = performanceHistory.reduce((a, b) => a + b, 0) / performanceHistory.length;
       performanceContext = `
-CANDIDATE PERFORMANCE SO FAR:
-- Average score: ${avgScore.toFixed(1)}/10
-- Questions answered: ${performanceHistory.length}/${totalQuestions}
-- Trend: ${avgScore >= 7 ? 'Strong performer - can handle harder questions' : avgScore >= 5 ? 'Average performer - maintain current difficulty' : 'Struggling - consider easier questions'}
-`;
+ CANDIDATE PERFORMANCE SO FAR:
+ - Average score: ${avgScore.toFixed(1)}/10
+ - Questions answered: ${performanceHistory.length}/${totalQuestions}
+ - Trend: ${avgScore >= 7 ? 'Strong performer - can handle harder questions' : avgScore >= 5 ? 'Average performer - maintain current difficulty' : 'Struggling - consider easier questions'}
+ `;
     }
 
     const prompt = `You are an expert technical interviewer for a ${jobRole} position specializing in ${technology}.

@@ -36,7 +36,7 @@ exports.getStats = async (req, res) => {
     const avg = arr => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1) : 0;
 
     const recentTrend = allCompleted.slice(0, 10).reverse().map(i => ({
-      date: i.completedAt,
+      date: i.completedAt || i.startedAt,
       score: i.report?.overallScore || 0,
       technology: i.config?.technology
     }));
@@ -89,7 +89,7 @@ exports.getStats = async (req, res) => {
         technologyBreakdown,
         difficultyBreakdown,
         improvementOverTime: allCompleted.slice(0, 20).reverse().map(i => ({
-          date: i.completedAt,
+          date: i.completedAt || i.startedAt,
           score: i.report?.overallScore || 0
         })),
         topStrengths,

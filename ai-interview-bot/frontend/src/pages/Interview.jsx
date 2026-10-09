@@ -36,6 +36,14 @@ export default function Interview() {
     }
   }, [question, showEvaluation]);
 
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
   const loadFirstQuestion = async () => {
     try {
       const data = await api.interview.getFirstQuestion(id);

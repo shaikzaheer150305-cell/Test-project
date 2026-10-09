@@ -12,7 +12,10 @@ export default function ReportDetail() {
   useEffect(() => {
     api.reports.getOne(id)
       .then(d => setData(d))
-      .catch(() => {})
+      .catch((err) => {
+        console.error('Failed to fetch report:', err);
+        toast.error('Failed to load report');
+      })
       .finally(() => setLoading(false));
   }, [id]);
 
