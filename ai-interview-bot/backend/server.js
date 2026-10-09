@@ -22,6 +22,12 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(morgan('dev'));
 
+app.get('/', (_req, res) => {
+  const frontendUrl = process.env.FRONTEND_URL?.replace(/\/$/, '');
+  if (!frontendUrl) return res.status(503).json({ status: 'frontend_url_not_configured' });
+  res.redirect(302, `${frontendUrl}/login`);
+});
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/interviews', require('./routes/interviews'));
 app.use('/api/reports', require('./routes/reports'));
